@@ -1,0 +1,10 @@
+# -*- coding: utf-8 -*-    
+class HospedagemDesejo(object):
+    def __init__(self, estado, cidade, periodoInicio, periodoFim, numQuartoDesejo):
+        self.estado = estado
+        self.cidade = cidade
+        self.periodoInicio = periodoInicio
+        self.periodoFim = periodoFim
+        self.numQuartoDesejo = numQuartoDesejo
+    def to_JSON(self):
+        return {"estado":self.estado, "cidade":self.cidade, "periodoInicio":self.periodoInicio, "periodoFim":self.periodoFim, "numQuartoDesejo":self.numQuartoDesejo}

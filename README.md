@@ -1,2 +1,0 @@
-# sistemasdistribuidosT2
- 

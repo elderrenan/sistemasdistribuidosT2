@@ -1,0 +1,14 @@
+INSTUPReserva
+D:\UTFPR\7período\SistemasDistribuidos\Trabalhos\trabalho3\WebServiceClient2\Reserva.py
+INFOS:&&1|1|1|0&&2|2|1|1&&3|3|1|4&&3|5|1|4&&3|6|1|4&&3|7|1|4&&3|8|1|4&&3|9|1|4&&3|10|1|4&&2|11|1|1
+numReservas=8
+codigo=9
+Reserva=1
+numVezes=5
+to_JSON=11
+codSeg=6
+cpf=7
+Reserva.__init__=4
+nomeCliente=10
+__init__=2
+numCartao=3

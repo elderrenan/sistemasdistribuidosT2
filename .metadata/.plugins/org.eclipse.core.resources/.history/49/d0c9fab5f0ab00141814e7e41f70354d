@@ -1,0 +1,57 @@
+# -*- coding: utf-8 -*-
+import json
+
+import requests
+
+from Reserva import Reserva
+
+
+def request_to_json(response):
+    if(response.status_code == 200):
+        response_content_byte = response.content
+        response_content_str = response_content_byte.decode('unicode_escape')
+        response_content_json = json.loads(response_content_str)
+        
+        return response_content_json
+    else:
+        print("TENHO PROBLEMAS ", response.status_code)
+        
+def print_list(lista):
+    print("====================================================")
+    for i in lista:
+        for chave, valor in i.items():
+            print(chave, " - ", valor)
+        print("====================================================")
+    print()
+
+def reservar(cod, url):
+    print("Reserva!")   
+    numCartao = input("Numero do seu cart�o de cr�dito")
+    numVezes = input("Numero de parcelas")
+    codSeg = input("c�digo de seguran�a do cart�o")
+    cpf = input("CPF do propriet�rio do cart�o")
+    numReservas = input("Numero de reservas ")
+    codigo = cod
+    nomeCliente = input("Nome do propriet�rio do cart�o")
+    reserva = Reserva(numCartao, numVezes, codSeg, cpf, numReservas, codigo, nomeCliente)
+    
+    resposta = exec_request(url + "/reserva", reserva.to_JSON(), "post")
+
+    if(resposta.status_code == 200):
+        print("RESERVA EFETUADA COM SUCESSO")
+        return True
+    else:
+        print("TENHO PROBLEMAS ", resposta.status_code)
+        return False
+    
+def exec_request(url, json, http_comand):
+    if http_comand == "post":
+        resposta = requests.post(url=url, json=json)
+    if http_comand == "get":
+        resposta = requests.get(url=url, json=json)
+    if http_comand == "put":
+        resposta = requests.put(url=url, json=json)
+    if(resposta.status_code == 200):
+        return resposta
+    else:
+        print("TENHO PROBLEMAS ", resposta.status_code)
