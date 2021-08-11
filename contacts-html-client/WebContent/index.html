@@ -1,0 +1,242 @@
+<html>
+
+<head>
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="js/contacts.js"></script>
+<script>
+
+function formToJSON() {
+    var result = {
+        "id" : $('#contactId').val(),
+        "name" : $('#txtName').val(),
+        "phones" : [],
+        "emails" : []
+    };
+
+    $("#phones span").each(function(index, elem) {
+
+        result.phones.push({
+            "type" : $("#phones #" + elem.id + " input:eq(0)").val(),
+            "number" : $("#phones #" + elem.id + " input:eq(1)").val()
+        });
+
+    });
+
+    $("#emails span").each(function(index, elem) {
+
+        result.emails.push({
+            "type" : $("#emails #" + elem.id + " input:eq(0)").val(),
+            "address" : $("#emails #" + elem.id + " input:eq(1)").val()
+        });
+
+    });
+
+    return (JSON.stringify(result));
+}
+
+function loadContact(id) {
+    findById(id, function(data) {
+        fillForm(data);
+        $("#form").css({
+            "visibility" : "visible",
+            "display" : "block"
+        });
+        $("#fieldset").html(" Editando Contato ");
+    });
+}
+
+function clearForm() {
+    $("#fieldset").html("");
+    fillForm({
+        "name" : ""
+    });
+}
+
+function fillForm(contact) {
+
+    $("#contactId").val(contact.id);
+
+    $("#txtName").val(contact.name);
+
+    $("#phones").html("");
+    if (contact.phones != null) {
+        for ( var i = 0; i < contact.phones.length; i++) {
+            addInput("#phones", contact.phones[i].type,
+                    contact.phones[i].number);
+        }
+    }
+
+    $("#emails").html("");
+    if (contact.emails != null) {
+        for ( var i = 0; i < contact.emails.length; i++) {
+            addInput("#emails", contact.emails[i].type,
+                    contact.emails[i].address);
+        }
+    }
+}
+
+function addInput(root, type, value) {
+    var index = $(root).children().length;
+    var html = "<span id='item" + index + "' ><input type='text' value='"
+            + type + "'>";
+    html += "<input type='text' value='" + value + "'>";
+    html += "<input type='button' value='-' onclick='$(\"" + root + " #item"
+            + index + "\").remove()'><br/></span>";
+
+    inputs = $(root).append(html);
+}
+
+
+function saveOrUpdate() {
+    if ($("#contactId").val() != null && $("#contactId").val() != "") {
+        updateContact($('#contactId').val(), formToJSON(), function(data, textStatus, jqXHR) {
+            alert('Contato atualizado com sucesso!');
+            clearForm();
+            $("#form").css({
+                "visibility" : "hidden",
+                "display" : "none"
+            });
+            findAll();
+        });
+    } else {
+        addContact(formToJSON(), function(data, textStatus, jqXHR) {
+            alert('Contato criado com sucesso!');
+            clearForm();
+            $("#form").css({
+                "visibility" : "hidden",
+                "display" : "none"
+            });
+            findAll(renderList);
+        });
+    }
+}
+
+function newContact() {
+    clearForm();
+    $("#form").css({
+        "visibility" : "visible",
+        "display" : "block"
+    });
+    $("#fieldset").html(" Novo Contato ");
+}
+
+function search() {
+    findByName($("#searchName").val(), renderList);
+}
+
+function removeContact(id) {
+    deleteContact(id, function(data, textStatus, jqXHR) {
+        alert('Contato removido com sucesso!');
+        findAll(renderList);
+    });
+}
+
+function cancel() {
+
+    $("#form").css({
+        "visibility" : "hidden",
+        "display" : "none"
+    });
+    clearForm();
+}
+
+function renderList(data) {
+
+    var html = "";
+
+    html += "<ul>";
+
+    for ( var i = 0; i < data.length; i++) {
+        var contact = data[i];
+
+        html += "<li><strong><a href='#' onclick='loadContact("
+                + contact.id + ")'>#" + contact.id + " - " + contact.name
+                + "</a></strong>";
+
+        if (contact.phones != null && contact.phones.length > 0) {
+            html += " | " + contact.phones[0].number + " | ";
+        }
+
+        if (contact.emails != null && contact.emails.length > 0) {
+            html += " <a href='mailto:" + contact.emails[0].address + "'>"
+                    + contact.emails[0].address + "</a> ";
+        }
+
+        html += "<input type='button' value='-' title='Apagar este contato' onclick='removeContact("
+                + contact.id + ")'>";
+
+        html += "</li>";
+
+    }
+
+    html += "</ul>";
+
+    $("#result").html(html);
+}
+
+$(function() {
+    
+    findAll(renderList);
+
+    $("#searchName").keyup(function(event) {
+        if (event.keyCode == 13) {
+            $("#btnSearch").click();
+        }
+    });
+
+});
+
+
+</script>
+</head>
+
+<body>
+
+    <h1>Contatos</h1>
+    <hr />
+
+    <div id="actions">
+
+        <fieldset>
+            <legend>Buscar Contato</legend>
+            <label>Nome: </label> <input type="text" id="searchName">
+            <input type="button" id="btnSearch" value="Buscar"
+                onclick="search();">
+        </fieldset>
+
+    </div>
+
+    <div id="result"></div>
+
+    <input type="button" value="Novo" onclick="newContact();">
+
+    <br />
+    <br />
+
+    <div id="form" style="visibility: hidden; display: none;">
+
+        <form>
+            <fieldset>
+                <legend id="fieldset"></legend>
+                <input id="contactId" type="hidden"> <label
+                    for="txtName">Nome: </label> <input id="txtName"
+                    type="text" name="name" /><br /> Phones: <input
+                    type="button" value="+"
+                    onclick="addInput('#phones', '', '')">
+                <div id="phones"></div>
+                E-mails: <input type="button" value="+"
+                    onclick="addInput('#emails', '', '')">
+                <div id="emails"></div>
+                <br /> <input id="btnSave" type="button" value="Salvar"
+                    onclick="saveOrUpdate();"> <input
+                    id="btnCancel" type="reset" value="Cancelar"
+                    onclick="cancel();">
+
+            </fieldset>
+        </form>
+    </div>
+
+
+</body>
+
+</html>
