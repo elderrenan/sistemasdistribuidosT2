@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename resource &apos;WebServiceClient2/Entidades/PacoteDesejo&apos; to &apos;PacoteDesejo.py&apos;" description="Rename resource &apos;PacoteDesejo&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Entidades/PacoteDesejo" name="PacoteDesejo.py" stamp="1421841487108" updateReferences="true"/>
-</session>
