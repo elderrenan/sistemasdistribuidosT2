@@ -1,10 +1,10 @@
-MODULES_MANAGER_V2
-CtrlHospedagem|D:\UTFPR\7período\SistemasDistribuidos\Trabalhos\trabalho3\WebServiceClient2\CtrlHospedagem.py
-CtrlPacote|D:\UTFPR\7período\SistemasDistribuidos\Trabalhos\trabalho3\WebServiceClient2\CtrlPacote.py
-CtrlPassagem|D:\UTFPR\7período\SistemasDistribuidos\Trabalhos\trabalho3\WebServiceClient2\CtrlPassagem.py
-HospedagemDesejo|D:\UTFPR\7período\SistemasDistribuidos\Trabalhos\trabalho3\WebServiceClient2\HospedagemDesejo.py
-PacoteDesejo|D:\UTFPR\7período\SistemasDistribuidos\Trabalhos\trabalho3\WebServiceClient2\PacoteDesejo.py
-PassagemDesejo|D:\UTFPR\7período\SistemasDistribuidos\Trabalhos\trabalho3\WebServiceClient2\PassagemDesejo.py
-Reserva|D:\UTFPR\7período\SistemasDistribuidos\Trabalhos\trabalho3\WebServiceClient2\Reserva.py
-Util|D:\UTFPR\7período\SistemasDistribuidos\Trabalhos\trabalho3\WebServiceClient2\Util.py
-main|D:\UTFPR\7período\SistemasDistribuidos\Trabalhos\trabalho3\WebServiceClient2\main.py
+MODULES_MANAGER_V3
+CtrlHospedagem|D:\Google Drive\UTFPR\2021-01\SistemasDistribuidos\Trabalhos\sistemasdistribuidosT2\WebServiceClient2\CtrlHospedagem.py
+CtrlPacote|D:\Google Drive\UTFPR\2021-01\SistemasDistribuidos\Trabalhos\sistemasdistribuidosT2\WebServiceClient2\CtrlPacote.py
+CtrlPassagem|D:\Google Drive\UTFPR\2021-01\SistemasDistribuidos\Trabalhos\sistemasdistribuidosT2\WebServiceClient2\CtrlPassagem.py
+HospedagemDesejo|D:\Google Drive\UTFPR\2021-01\SistemasDistribuidos\Trabalhos\sistemasdistribuidosT2\WebServiceClient2\HospedagemDesejo.py
+PacoteDesejo|D:\Google Drive\UTFPR\2021-01\SistemasDistribuidos\Trabalhos\sistemasdistribuidosT2\WebServiceClient2\PacoteDesejo.py
+PassagemDesejo|D:\Google Drive\UTFPR\2021-01\SistemasDistribuidos\Trabalhos\sistemasdistribuidosT2\WebServiceClient2\PassagemDesejo.py
+Reserva|D:\Google Drive\UTFPR\2021-01\SistemasDistribuidos\Trabalhos\sistemasdistribuidosT2\WebServiceClient2\Reserva.py
+Util|D:\Google Drive\UTFPR\2021-01\SistemasDistribuidos\Trabalhos\sistemasdistribuidosT2\WebServiceClient2\Util.py
+main|D:\Google Drive\UTFPR\2021-01\SistemasDistribuidos\Trabalhos\sistemasdistribuidosT2\WebServiceClient2\main.py

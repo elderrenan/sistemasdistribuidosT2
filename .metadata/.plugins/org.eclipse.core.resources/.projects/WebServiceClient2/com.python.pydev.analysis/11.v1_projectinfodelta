@@ -1,9 +1,0 @@
-INSTUPUtil
-D:\UTFPR\7período\SistemasDistribuidos\Trabalhos\trabalho3\WebServiceClient2\Util.py
-INFOS:&&2|1|2|0&&2|3|2|0&&2|4|2|0&&2|5|2|0&&2|6|2|0
-reservarIV=5
-print_list=3
-reservar=4
-exec_request=6
-Util=2
-request_to_json=1
