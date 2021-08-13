@@ -22,6 +22,8 @@ Avaliação (valor 3,0):
 - Registro de interesse em eventos (valor 1,0);
 - Cancelamento de registro de interesse (valor 0,5);
 - Envio de notificações com uso do SSE do servidor para o cliente (valor 1,0).
+
 Obs.: como não precisamos mais enviar a chave pública, pois não precisamos mais assinar as mensagens, se vocês preferirem podem remover o método de cadastro de usuário.
-Nesse caso, informações para contato podem ser enviadas no registro de interesse. Porém, não há problema se quiserem manter a assinatura e o cadastro
+Nesse caso, informações para contato podem ser enviadas no registro de interesse.
+Porém, não há problema se quiserem manter a assinatura e o cadastro
 
