@@ -1,0 +1,275 @@
+<html>
+<head>
+<title>Caronas</title>
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="js/contacts.js"></script>
+<script>
+
+	function adicionarUsuario() {
+	
+	    $("#nome").prop('disabled', true);
+	    $("#telefone").prop('disabled', true);
+	    $("#btnSave").prop('disabled', true);
+	
+	    $("#actions").css({
+	        "visibility" : "visible",
+	        "display" : "block"
+	    });	    
+	    
+	    $("#formC").css({
+	        "visibility" : "visible",
+	        "display" : "block"
+	    });
+	    
+	    $("#formI").css({
+	        "visibility" : "visible",
+	        "display" : "block"
+	    });	    
+	
+		//addContact(formToJSON(), function(data, textStatus, jqXHR) {
+	    cadastraUsuario($('#nome').val(), $('#telefone').val(), function(data, textStatus, jqXHR) {
+	        alert('Contato criado com sucesso!');
+	        //clearForm();
+	        //$("#form").css({
+	        //    "visibility" : "hidden",
+	        //    "display" : "none"
+	        //});
+	        //findAll(renderList);
+	    });
+	}
+
+	function adicionaCarona(root, type, value) {
+	    var index = $(root).children().length;
+	    var html = "<span id='item" + index + "' >";
+	    html += "<br/><label>Origem: </label> ";
+	    html += "<input type='text' value='" + type + "'> ";
+	    html += "<label>Destino: </label> ";
+	    html += "<input type='text' value='" + value + "'> ";
+	    html += "<label>Data: </label> ";
+	    html += "<input type='text' value='" + value + "'> ";
+	    html += "<label>Passageiros: </label> ";
+	    html += "<input type='text' value='" + value + "'> ";	    
+	    html += "<input type='button' value='Cadastrar' onclick='cadastraCarona()'> ";
+	    html += "<input type='button' value='Cancelar' onclick='$(\"" + root + " #item" + index + "\").remove()'><br/>"
+	    html += "</span>";
+	    
+	    inputs = $(root).append(html);
+	}
+	
+	function adicionaInteresse(root, type, value) {
+	    var index = $(root).children().length;
+	    var html = "<span id='item" + index + "' >";
+	    html += "<br/><label>Origem: </label> ";
+	    html += "<input type='text' value='" + type + "'> ";
+	    html += "<label>Destino: </label> ";
+	    html += "<input type='text' value='" + value + "'> ";
+	    html += "<label>Data: </label> ";
+	    html += "<input type='text' value='" + value + "'> ";    
+	    html += "<input type='button' value='Cadastrar' onclick='cadastraCarona()'> ";
+	    html += "<input type='button' value='Cancelar' onclick='$(\"" + root + " #item" + index + "\").remove()'><br/>"
+	    html += "</span>";
+	    
+	    inputs = $(root).append(html);
+	}
+
+	function buscaCarona() {
+		listaCaronas($("#searchOrigem").val(), $("#searchDestino").val(), $("#searchData").val(), renderList);
+	}	
+	
+	function formToJSON() {
+	    var result = {
+	        "id" : $('#id').val(),
+	        "nome" : $('#nome').val(),
+	        "telefone" : $('#telefone').val()
+	    };
+	    /*$("#phones span").each(function(index, elem) {
+	
+	        result.phones.push({
+	            "type" : $("#phones #" + elem.id + " input:eq(0)").val(),
+	            "number" : $("#phones #" + elem.id + " input:eq(1)").val()
+	        });
+	
+	    });*/
+	
+	
+	    return (JSON.stringify(result));
+	}
+	
+	function loadContact(id) {
+	    findById(id, function(data) {
+	        fillForm(data);
+	        $("#form").css({
+	            "visibility" : "visible",
+	            "display" : "block"
+	        });
+	        $("#fieldset").html(" Editando Contato ");
+	    });
+	}
+	
+	function clearForm() {
+	    $("#fieldset").html("");
+	    fillForm({
+	        "name" : ""
+	    });
+	}
+	
+	function fillForm(cliente) {
+	
+	    $("#id").val(cliente.id);
+	    $("#nome").val(cliente.nome);
+	    $("#telefone").val(cliente.telefone);
+	
+	    /*$("#phones").html("");
+	    if (cliente.phones != null) {
+	        for ( var i = 0; i < cliente.phones.length; i++) {
+	            addInput("#phones", cliente.phones[i].type,
+	            		cliente.phones[i].number);
+	        }
+	    }*/
+	
+	
+	}	
+	
+	function novaCarona() {
+	    //clearForm();
+
+		/*if ($("#id").val() != null && $("#id").val() != "") {
+	        updateContact($('#id').val(), formToJSON(), function(data, textStatus, jqXHR) {
+	            alert('Contato atualizado com sucesso!');
+	            clearForm();
+	            $("#form").css({
+	                "visibility" : "hidden",
+	                "display" : "none"
+	            });
+	            findAll();
+	        });
+	    }	    */
+	    
+	    $("#oferecerCarona").css({
+	        "visibility" : "visible",
+	        "display" : "block"
+	    });
+	    
+	    $("#formC").css({
+	        "visibility" : "visible",
+	        "display" : "block"
+	    });
+	    
+	}
+	
+	function novoInteresse() {
+	    //clearForm();
+	    $("#interesseCarona").css({
+	        "visibility" : "visible",
+	        "display" : "block"
+	    });
+	}	
+	
+	function removeContact(id) {
+	    deleteContact(id, function(data, textStatus, jqXHR) {
+	        alert('Contato removido com sucesso!');
+	        findAll(renderList);
+	    });
+	}
+	
+	function cancel() {
+	
+	    $("#form").css({
+	        "visibility" : "hidden",
+	        "display" : "none"
+	    });
+	    clearForm();
+	}
+	
+	function renderList(data) {
+	
+		alert('Renderizando lista')
+		
+	    var html = "";
+	
+	    html += "<ul>";
+	
+	    for (var i = 0; i < data.length; i++) {
+	        var result = data[i];
+	        html += "<li>Nome: " + result + "." + result.nome + ". Telefone: " + result.telefone + ".</li>";
+	
+	    }
+	
+	    html += "</ul>";
+	
+	    $("#result").html(html);
+	}
+	
+	$(function() {
+	    
+	    findAll(renderList);
+	
+	    $("#searchName").keyup(function(event) {
+	        if (event.keyCode == 13) {
+	            $("#btnSearch").click();
+	        }
+	    });
+	
+	});
+</script>
+</head>
+<body>
+    <h1>Caronas</h1>
+    <hr/>
+    <div id="form">
+		<form>
+			<fieldset>
+			    <legend id="fieldset"> Cadastro de Usuário </legend>
+			    <input id="id" type="hidden">
+			    <label for="nome">Nome: </label>
+			   	<input id="nome" type="text" name="nome"/>
+			    <label for="telefone">Telefone: </label>
+			    <input id="telefone" type="text" name="telefone"/>
+				<br/>
+				<br/>
+				<input id="btnSave" type="button" value="Salvar" onclick="adicionarUsuario();">
+			</fieldset>
+		</form>
+	</div>   
+    <br/>
+    <div id="actions" style="visibility: hidden; display: none;">
+        <fieldset>
+            <legend id="fieldsetB">Buscar Caronas</legend>
+            <label>Origem: </label>
+            <input type="text" id="searchOrigem">
+            <label>Destino: </label>
+            <input type="text" id="searchDestino">
+            <label>Data: </label>
+            <input type="text" id="searchData">                        
+            <input type="button" id="btnSearch" value="Buscar" onclick="buscaCarona();">
+            <input id="btnCancel" type="reset" value="Cancelar" onclick="cancel();">
+        </fieldset>
+    </div>
+    <br/>
+    <div id="result"></div>
+    <br/>
+    <div id="formC" style="visibility: hidden; display: none;">
+        <form>
+            <fieldset>
+                <legend id="fieldsetC">Oferecer caronas</legend>
+				<br/> 
+				<input type="button" value="Nova carona" onclick="adicionaCarona('#caronas', '', '')">
+		        <div id="caronas"></div>
+		        <br/>
+		    </fieldset>
+        </form>
+    </div>
+    <div id="formI" style="visibility: hidden; display: none;">
+        <form>
+            <fieldset>
+                <legend id="fieldsetI">Registrar interesse em caronas</legend>
+				<br/> 
+				<input type="button" value="Novo interesse" onclick="adicionaInteresse('#interesses', '', '')">
+		        <div id="interesses"></div>
+		        <br/>
+		    </fieldset>
+        </form>
+    </div> 
+    <br/>    
+</body>
+</html>
