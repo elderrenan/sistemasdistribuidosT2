@@ -23,15 +23,17 @@ public class Servidor {
     ArrayList<InteressePassageiro> interessePassageiro = new ArrayList<>(); //Lista de interesse em passageiros
 
 	public Servidor() {
+		
+			interessePassageiro.add(new InteressePassageiro("Elder", "(41) 998629640", "Curitiba", "Paranagua", "13-08-2021", "4"));
+			interessePassageiro.add(new InteressePassageiro("David", "(41) 9984569640", "Curitiba", "Paranagua", "13-08-2021", "2"));			
+			interessePassageiro.add(new InteressePassageiro("Nataly", "(41) 998643444", "Paranagua", "Curitiba", "14-08-2021", "3"));
 
-
-			InteressePassageiro interesse = new InteressePassageiro("Elder", "(41) 998629640", "Curitiba", "Paranagua", "13-08-2021", "4");			
-			interessePassageiro.add(interesse);
-			interesse = new InteressePassageiro("David", "(41) 9984569640", "Curitiba", "Paranagua", "13-08-2021", "2");			
-			interessePassageiro.add(interesse);
-			interesse = new InteressePassageiro("Nataly", "(41) 998643444", "Paranagua", "Curitiba", "14-08-2021", "3");			
-			interessePassageiro.add(interesse);
-
+			interesseMotorista.add(new InteresseCarona("Elder", "(41) 998629640", "Curitiba", "Paranagua", "13-08-2021"));
+			interesseMotorista.add(new InteresseCarona("David", "(41) 9984569640", "Curitiba", "Paranagua", "13-08-2021"));			
+			interesseMotorista.add(new InteresseCarona("David", "(41) 998643444", "Paranagua", "Curitiba", "14-08-2021"));
+			interesseMotorista.add(new InteresseCarona("Nataly", "(41) 998629640", "Curitiba", "Paranagua", "13-08-2021"));
+			interesseMotorista.add(new InteresseCarona("Matheus", "(41) 9984569640", "Curitiba", "Paranagua", "13-08-2021"));			
+			
 	}
 
 	
@@ -46,17 +48,10 @@ public class Servidor {
 					.status(Response.Status.BAD_REQUEST)
 					.entity("O nome do cliente é obrigatorio").build());
 		}
-			
-		System.out.println(clientes.size());
 		
+		//Adiciona cliente na lista de clientes
 		Cliente cliente = new Cliente(clientes.size(), nome, telefone);
-		System.out.println((new Cliente(clientes.size(), nome, telefone)));
-		System.out.println(cliente);
-		
-        //Adiciona cliente na lista de clientes
         clientes.add(cliente);
-        
-        System.out.println(clientes.size());
         
         //Mostra todos os clientes cadastrados no console
         clientes.forEach(c -> {
@@ -130,7 +125,7 @@ public class Servidor {
         System.out.println("Passageiros: " + interesseMotorista.size());
 
         //Código único do intesse é a posição do elemento na matriz, que não muda
-        return String.valueOf(interesseMotorista.size());
+        return String.valueOf(interesseMotorista.size()-1);
     }	
 	
 	@POST
@@ -143,6 +138,7 @@ public class Servidor {
         interesseMotorista.forEach(c -> {
             //Verificação de nulo para evitar null pointer exception dados que id único é o índice na lista
             if(c != null){
+            	
                 try {
                     if(c.getOrigem().equals(origem) && c.getDestino().equals(destino) && c.getData().equals(data)){
 
@@ -162,7 +158,7 @@ public class Servidor {
         });
 
         //Código único do intesse é a posição do elemento na matriz, que não muda     
-        return String.valueOf(interessePassageiro.size());
+        return String.valueOf(interessePassageiro.size()-1);
                 
     }	
 	
@@ -208,22 +204,52 @@ public class Servidor {
 		return Response.ok().build();
 	}
 
-    /*      
-
-    @PUT
-    @Path("/{id}")
+	@DELETE
+    @Path("/cancelaInteresse/")
     @Consumes(MediaType.APPLICATION_JSON)  
-    public void cancInteresseEmMotorista(@PathParam("id") int id) {
+    public Response cancInteresseEmMotorista(@QueryParam("id") String id) {
+	
+		System.out.println("Interesses antes:");
+		interesseMotorista.forEach(c -> {
+            System.out.println("Nome: " + c.getNome() + ". Telefone: " + c.getTelefone() + ".");
+        });    	
+        System.out.println();			
+		
         //Cancela o interesse em carona tornando nulos os dados do motorista
-        interesseMotorista.set(id, null);  
+        interesseMotorista.set(Integer.parseInt(id)-1, null);
+     
+        System.out.println("Interesses depois:");
+        interesseMotorista.forEach(c -> {
+        	if(c != null){
+        		System.out.println("Nome: " + c.getNome() + ". Telefone: " + c.getTelefone() + ".");
+        	}
+        });        
+        
+        return Response.ok().build();
     }    
  
-    @PUT
-    @Path("/{id}")
+    @DELETE
+    @Path("/cancelaCarona/")
     @Consumes(MediaType.APPLICATION_JSON)    
-    public void cancInteresseEmPassageiro(@PathParam("id") int id) {
+    public Response cancInteresseEmPassageiro(@QueryParam("id") String id) {
+    	
+    	System.out.println("Caronas antes:");
+    	interessePassageiro.forEach(c -> {
+            System.out.println("Nome: " + c.getNome() + ". Telefone: " + c.getTelefone() + ".");
+        });    	
+        System.out.println();	
+    	
         //Cancela o interesse em passeiro tornando nulos os dados da carona
-        interessePassageiro.set(id, null);
+        interessePassageiro.set(Integer.parseInt(id)-1, null);
+
+        System.out.println("Caronas depois:");
+        interessePassageiro.forEach(c -> {
+        	if(c != null){
+        		System.out.println("Nome: " + c.getNome() + ". Telefone: " + c.getTelefone() + ".");
+        	}
+        }); 
+        
+        return Response.ok().build();
     } 	
-	*/
+
 }

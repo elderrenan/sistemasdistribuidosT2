@@ -48,6 +48,17 @@ function cadastraCarona(nome, telefone, origem, destino, data, passageiros, call
 	}
 }
 
+function cancelaCarona(id, callback) {
+	$.ajax({
+		type : 'DELETE',
+		url : rootURL + '/cancelaCarona/' + '?id=' + id,
+		success : callback,
+		error : function(jqXHR, textStatus, errorThrown) {
+			alert('Erro excluindo carona! ' + textStatus);
+		}
+	});
+}
+
 function cadastraInteresse(nome, telefone, origem, destino, data, callback) {
 	
 	if (nome != null && nome != "") {
@@ -59,6 +70,17 @@ function cadastraInteresse(nome, telefone, origem, destino, data, callback) {
 		});
 	}
 	
+}
+
+function cancelaInteresse(id, callback) {
+	$.ajax({
+		type : 'DELETE',
+		url : rootURL + '/cancelaInteresse/' + '?id=' + id,
+		success : callback,
+		error : function(jqXHR, textStatus, errorThrown) {
+			alert('Erro excluindo carona! ' + textStatus);
+		}
+	});
 }
 
 function findAll(callback) {

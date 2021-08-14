@@ -33,6 +33,10 @@
 	    
 	}
 
+	function buscaCarona() {
+		listaCaronas($("#searchOrigem").val(), $("#searchDestino").val(), $("#searchData").val(), renderList);
+	}		
+		
 	function adicionaCarona(root) {
 	    var index = $(root).children().length;
 	    var html = "<span id='itemC" + index + "' >";
@@ -44,12 +48,28 @@
 	    html += "<input type='text' id='carData" + index + "'> ";
 	    html += "<label>Passageiros: </label> ";
 	    html += "<input type='text' id='carPassageiros" + index + "'> ";    
-	    html += "<input type='button' value='Cadastrar' onclick='cadastrarCarona()'> ";
-	    html += "<input type='button' value='Cancelar' onclick='$(\"" + root + " #itemC" + index + "\").remove()'><br/>"
+	    html += "<input type='button' id='btCadrC" + index + "'value='Cadastrar' onclick='cadastrarCarona("+ index + ",itemC" + index + ")'> ";
+	    html += "<input type='button' id='btCancC" + index + "'value='Cancelar' disabled onclick='cancelarCarona(\"" + root + " #itemC" + index + "\"," + index + ")'><br/>"
 	    html += "</span>";
 	    
 	    inputs = $(root).append(html);
 	}
+	
+	function cadastrarCarona(index, root) {
+		$("#btCadrC"+index).prop('disabled', true);
+		$("#btCancC"+index).prop('disabled', false);
+		cadastraCarona($("#nome").val(), $("#telefone").val(), $("#carOrigem"+index).val(), $("#carDestino"+index).val(), $("#carData"+index).val(), $("#carPassageiros"+index).val(), function(data, textStatus, jqXHR) {
+	        alert('Carona cadastrada com sucesso! ' + data);
+	        $(root).append("<input id='idCarona" + index + "' style='visibility: hidden; display: none;' name='"+ data+ "' value='" + data + "'>");
+	    });
+	}
+	
+	function cancelarCarona(root, index) {
+		cancelaCarona($("#idCarona"+index).val(), function(data, textStatus, jqXHR) {
+	        alert('Carona cancelada com sucesso!')
+	    });
+		$(root).remove();
+	}	
 	
 	function adicionaInteresse(root) {
 	    var index = $(root).children().length;
@@ -60,28 +80,28 @@
 	    html += "<input type='text' id='intDestino" + index + "'> ";
 	    html += "<label>Data: </label> ";
 	    html += "<input type='text' id='intData" + index + "'> ";    
-	    html += "<input type='button' value='Cadastrar' onclick='cadastrarInteresse("+ index + ")'>";
-	    html += "<input type='button' value='Cancelar' onclick='$(\"" + root + " #itemI" + index + "\").remove()'><br/>"
+	    html += "<input type='button' id='btCadrI" + index + "' value='Cadastrar' onclick='cadastrarInteresse("+ index + ",itemI" + index + ")'> ";
+	    html += "<input type='button' id='btCancI" + index + "' value='Cancelar'  disabled onclick='cancelarInteresse(\"" + root + " #itemC" + index + "\"," + index + ")'><br/>"
 	    html += "</span>";
 	    
 	    inputs = $(root).append(html);
-	}
-		
-	function buscaCarona() {
-		listaCaronas($("#searchOrigem").val(), $("#searchDestino").val(), $("#searchData").val(), renderList);
-	}	
-
-	function cadastrarCarona(index) {
-		cadastraCarona($("#nome").val(), $("#telefone").val(), $("#carOrigem"+index).val(), $("#carDestino"+index).val(), $("#carData"+index).val(), $("#carPassageiros"+index).val(), function(data, textStatus, jqXHR) {
-	        alert('Carona cadastrada com sucesso! ' + data);
-	    });
-	}	
+	}		
 	
-	function cadastrarInteresse(index) {
+	function cadastrarInteresse(index, root) {
+		$("#btCadrI"+index).prop('disabled', true);
+		$("#btCancI"+index).prop('disabled', false);
 		cadastraInteresse($("#nome").val(), $("#telefone").val(), $("#intOrigem"+index).val(), $("#intDestino"+index).val(), $("#intData"+index).val(), function(data, textStatus, jqXHR) {
 	        alert('Interesse registrado com sucesso! ' + data);
+	        $(root).append("<input id='idInteresse" + index + "' style='visibility: hidden; display: none;' name='"+ data+ "' value='" + data + "'>");
 	    });
 	}
+	
+	function cancelarInteresse(root, index) {
+		cancelaInteresse($("#idInteresse"+index).val(), function(data, textStatus, jqXHR) {
+	        alert('Interesse cancelado com sucesso!')
+	    });
+		$(root).remove();
+	}	
 	
 	function renderList(data) {
 		
