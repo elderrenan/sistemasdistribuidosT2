@@ -25,9 +25,11 @@ public class Servidor {
 	public Servidor() {
 
 
-			InteressePassageiro interesse = new InteressePassageiro("Elder", "(41) 998629640", "Curitiba", "Paranagua", "13-08-2021", 4);			
+			InteressePassageiro interesse = new InteressePassageiro("Elder", "(41) 998629640", "Curitiba", "Paranagua", "13-08-2021", "4");			
 			interessePassageiro.add(interesse);
-			interesse = new InteressePassageiro("Nataly", "(41) 998643444", "Paranagua", "Curitiba", "14-08-2021", 3);			
+			interesse = new InteressePassageiro("David", "(41) 9984569640", "Curitiba", "Paranagua", "13-08-2021", "2");			
+			interessePassageiro.add(interesse);
+			interesse = new InteressePassageiro("Nataly", "(41) 998643444", "Paranagua", "Curitiba", "14-08-2021", "3");			
 			interessePassageiro.add(interesse);
 
 	}
@@ -44,16 +46,22 @@ public class Servidor {
 					.status(Response.Status.BAD_REQUEST)
 					.entity("O nome do cliente é obrigatorio").build());
 		}
-				
-		Cliente cliente = new Cliente(clientes.size() +1, nome, telefone);
+			
+		System.out.println(clientes.size());
+		
+		Cliente cliente = new Cliente(clientes.size(), nome, telefone);
+		System.out.println((new Cliente(clientes.size(), nome, telefone)));
+		System.out.println(cliente);
 		
         //Adiciona cliente na lista de clientes
         clientes.add(cliente);
         
+        System.out.println(clientes.size());
+        
         //Mostra todos os clientes cadastrados no console
         clientes.forEach(c -> {
             System.out.println("Id: " + c.getId() + ". Nome: " + c.getNome() + ". Telefone: " + c.getTelefone() + ".");
-        });		
+        });	
 		
 		return cliente;
 	}	
@@ -77,10 +85,87 @@ public class Servidor {
                 }
             }
         });
-        //System.out.println(result);
+        System.out.println(result);
 		return result;
 		
 	}	
+	
+	@POST
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path("/cadastroInteresse/{nome}/{telefone}/{origem}/{destino}/{data}")	
+	public String interesseEmMotorista(@PathParam("nome") String nome, @PathParam("telefone") String telefone, @PathParam("origem") String origem, @PathParam("destino") String destino, @PathParam("data") String data)  {
+		
+		InteresseCarona passageiro = new InteresseCarona();
+		passageiro.setNome(nome);
+		passageiro.setTelefone(telefone);
+		passageiro.setOrigem(origem);
+		passageiro.setDestino(destino);
+		passageiro.setData(data);
+        interesseMotorista.add(passageiro);
+
+        interesseMotorista.forEach(c -> {
+            System.out.println("Nome: " + c.getNome() + ". Telefone: " + c.getTelefone() + ".");
+        });	
+        
+        interessePassageiro.forEach(c -> {
+            //Verificação de nulo para evitar null pointer exception dados que id único é o índice na lista
+            if(c != null){
+                try {
+                    if(c.getOrigem().equals(origem) && c.getDestino().equals(destino) && c.getData().equals(data)){
+                        System.out.println("Interesse M: " + interesseMotorista.size());
+
+                        //Chamada bidirecional chamando método do cliente para notificar o motorista
+                        //c.getInterfaceCli().notificarMotorista("Novo passageiro! Passageiro: " + nome + " Telefone: " + telefone);
+
+                    } else {
+                        //"Notifica" motoristas que não se enquadraram nos dados da carona com vazio. Melhorar.
+                        //c.getInterfaceCli().notificarMotorista("");
+                    }
+                } catch (Exception ex) {
+                        System.out.println("NotificarPassageiro: " + ex.getMessage());
+                }
+            }
+        });
+
+        System.out.println("Passageiros: " + interesseMotorista.size());
+
+        //Código único do intesse é a posição do elemento na matriz, que não muda
+        return String.valueOf(interesseMotorista.size());
+    }	
+	
+	@POST
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path("/cadastroCarona/{nome}/{telefone}/{origem}/{destino}/{data}/{pass}")		
+	public String interesseEmPassageiro(@PathParam("nome") String nome, @PathParam("telefone") String telefone, @PathParam("origem") String origem, @PathParam("destino") String destino, @PathParam("data") String data, @PathParam("pass") String pass)  {
+		
+        interessePassageiro.add(new InteressePassageiro(nome, telefone, origem, destino, data, pass));
+
+        interesseMotorista.forEach(c -> {
+            //Verificação de nulo para evitar null pointer exception dados que id único é o índice na lista
+            if(c != null){
+                try {
+                    if(c.getOrigem().equals(origem) && c.getDestino().equals(destino) && c.getData().equals(data)){
+
+                        System.out.println("\ninteresse P: " + (interessePassageiro.size() - 1));
+
+                        //Chamada bidirecional chamando método do cliente para notificar o passageiro
+                        //c.getInterfaceCli().notificarPassageiro("Nova carona! Motorista: " + nome + " Telefone: " + telefone);
+
+                    } else {
+                        //"Notifica" passageiros que não se enquadraram nos dados da carona com vazio. Melhorar.           
+                        //c.getInterfaceCli().notificarPassageiro("");
+                    }
+                } catch (Exception ex) {
+                    System.out.println("NotificarPassageiro: " + ex.getMessage());
+                }
+            }
+        });
+
+        //Código único do intesse é a posição do elemento na matriz, que não muda     
+        return String.valueOf(interessePassageiro.size());
+                
+    }	
+	
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -123,37 +208,7 @@ public class Servidor {
 		return Response.ok().build();
 	}
 
-    /*   
-    public int interesseEmMotorista(String nome, String telefone, String origem, String destino, String data)  {
-
-        interesseMotorista.add(new InteresseCarona(nome, telefone, origem, destino, data));
-
-        interessePassageiro.forEach(c -> {
-            //Verificação de nulo para evitar null pointer exception dados que id único é o índice na lista
-            if(c != null){
-                try {
-                    if(c.getOrigem().equals(origem) && c.getDestino().equals(destino) && c.getData().equals(data)){
-                        System.out.println("Interesse M: " + (interesseMotorista.size() - 1));
-
-                        //Chamada bidirecional chamando método do cliente para notificar o motorista
-                        //c.getInterfaceCli().notificarMotorista("Novo passageiro! Passageiro: " + nome + " Telefone: " + telefone);
-
-                    } else {
-                        //"Notifica" motoristas que não se enquadraram nos dados da carona com vazio. Melhorar.
-                        //c.getInterfaceCli().notificarMotorista("");
-                    }
-                } catch (Exception ex) {
-                        System.out.println("NotificarPassageiro: " + ex.getMessage());
-                }
-            }
-        });
-
-        System.out.println();
-
-        //Código único do intesse é a posição do elemento na matriz, que não muda
-        return interesseMotorista.size() - 1;
-                
-    }    
+    /*      
 
     @PUT
     @Path("/{id}")
@@ -162,38 +217,6 @@ public class Servidor {
         //Cancela o interesse em carona tornando nulos os dados do motorista
         interesseMotorista.set(id, null);  
     }    
-    
-    public int interesseEmPassageiro(String nome, String telefone, String origem, String destino, String data, int passageiros) {
-
-        interessePassageiro.add(new InteressePassageiro(nome, telefone, origem, destino, data, passageiros));
-
-        interesseMotorista.forEach(c -> {
-            //Verificação de nulo para evitar null pointer exception dados que id único é o índice na lista
-            if(c != null){
-                try {
-                    if(c.getOrigem().equals(origem) && c.getDestino().equals(destino) && c.getData().equals(data)){
-
-                        System.out.println("\ninteresse P: " + (interessePassageiro.size() - 1));
-
-                        //Chamada bidirecional chamando método do cliente para notificar o passageiro
-                        //c.getInterfaceCli().notificarPassageiro("Nova carona! Motorista: " + nome + " Telefone: " + telefone);
-
-                    } else {
-                        //"Notifica" passageiros que não se enquadraram nos dados da carona com vazio. Melhorar.           
-                        //c.getInterfaceCli().notificarPassageiro("");
-                    }
-                } catch (Exception ex) {
-                    System.out.println("NotificarPassageiro: " + ex.getMessage());
-                }
-            }
-        });
-
-        System.out.println();
-
-        //Código único do intesse é a posição do elemento na matriz, que não muda
-        return interessePassageiro.size() - 1;
-                
-    }
  
     @PUT
     @Path("/{id}")

@@ -9,6 +9,7 @@ package servidor;
  *
  * @author elder
  */
+
 public class InteressePassageiro {
 
     private String nome;
@@ -16,13 +17,13 @@ public class InteressePassageiro {
     private String origem;
     private String destino;
     private String data;
-    private int passageiros;
+    private String passageiros;
 
     public InteressePassageiro() {
 
     }     
     
-    public InteressePassageiro(String nome, String telefone, String origem, String destino, String data, int passageiros) {
+    public InteressePassageiro(String nome, String telefone, String origem, String destino, String data, String passageiros) {
 
         this.nome = nome;
         this.telefone = telefone;
@@ -52,8 +53,20 @@ public class InteressePassageiro {
         return data;
     }
 
-    public int getPassageiros() {
+    public String getPassageiros() {
         return passageiros;
     }  
+    
+	@Override
+	public String toString() {
+		StringBuilder cliente = new StringBuilder();
+		cliente.append("{");
+		cliente.append(getNome());
+		cliente.append(", ");
+		cliente.append(getTelefone());
+		cliente.append("}");
+
+		return cliente.toString();
+	}    
     
 }

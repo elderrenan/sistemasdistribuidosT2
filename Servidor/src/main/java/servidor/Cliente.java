@@ -9,15 +9,16 @@ package servidor;
  *
  * @author elder
  */
+
 public class Cliente {
     
-    private String nome = "";
-    private String telefone = "";
+    private String nome;
+    private String telefone;
     private int id;
  
     public Cliente() {
 
-    }    
+    }  
     
     public Cliente(int id, String nome, String telefone) {
     	this.id = id;

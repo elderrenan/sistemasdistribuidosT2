@@ -2,16 +2,14 @@ var rootURL = "http://localhost:8080/Servidor/Servidor/funcoes";
 
 function cadastraUsuario(name, phone, callback) {
 	
-	if (nome != null && nome != "") {
+	if (name != null && name != "") {
 		$.ajax({
 			type : 'POST',
 			url : rootURL + '/cadastro/' + name + '/' + phone,
 			dataType : "json",
 			success : callback
 		});
-	} else {
-		findAll(callback);
-	}	
+	}
 	
 	/*$.ajax({
 		type : 'POST',
@@ -35,15 +33,38 @@ function listaCaronas(origem, destino, data, callback) {
 			dataType : "json",
 			success : callback
 		});
-	} else {
-		findAll(callback);
+	} 
+}
+
+function cadastraCarona(nome, telefone, origem, destino, data, passageiros, callback) {
+	
+	if (nome != null && nome != "") {
+		$.ajax({
+			type : 'POST',
+			url : rootURL + '/cadastroCarona/' + nome + '/' + telefone + '/' + origem + '/' + destino + '/' + data + '/' + passageiros,
+			dataType : "text",
+			success : callback
+		});
 	}
+}
+
+function cadastraInteresse(nome, telefone, origem, destino, data, callback) {
+	
+	if (nome != null && nome != "") {
+		$.ajax({
+			type : 'POST',
+			url : rootURL + '/cadastroInteresse/' + nome + '/' + telefone + '/' + origem + '/' + destino + '/' + data,
+			dataType : "text",
+			success : callback
+		});
+	}
+	
 }
 
 function findAll(callback) {
 	$.ajax({
 		type : 'GET',
-		url : rootURL,
+		url : rootURL + '/all',
 		dataType : "json", 
 		success : callback
 	});

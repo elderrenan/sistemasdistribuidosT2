@@ -9,6 +9,7 @@ package servidor;
  *
  * @author elder
  */
+
 public class InteresseCarona {
     
     private String nome;
@@ -48,5 +49,37 @@ public class InteresseCarona {
     public String getData() {
         return data;
     }
-      
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+
+	public void setOrigem(String origem) {
+		this.origem = origem;
+	}
+
+	public void setDestino(String destino) {
+		this.destino = destino;
+	}
+
+	public void setData(String data) {
+		this.data = data;
+	}
+  
+	@Override
+	public String toString() {
+		StringBuilder cliente = new StringBuilder();
+		cliente.append("{");
+		cliente.append(getNome());
+		cliente.append(", ");
+		cliente.append(getTelefone());
+		cliente.append("}");
+
+		return cliente.toString();
+	}  	
+    
 }
