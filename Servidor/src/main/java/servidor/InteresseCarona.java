@@ -16,11 +16,7 @@ public class InteresseCarona {
     private String telefone;
     private String origem;
     private String destino;
-    private String data;
-
-    public InteresseCarona() {
-
-    }    
+    private String data;   
     
     public InteresseCarona(String nome, String telefone, String origem, String destino, String data) {
         this.nome = nome;
@@ -29,6 +25,10 @@ public class InteresseCarona {
         this.destino = destino;
         this.data = data;
     }
+    
+    public InteresseCarona() {
+
+    }    
 
     public String getNome() {
         return nome;

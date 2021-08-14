@@ -17,11 +17,7 @@ public class InteressePassageiro {
     private String origem;
     private String destino;
     private String data;
-    private String passageiros;
-
-    public InteressePassageiro() {
-
-    }     
+    private String passageiros;    
     
     public InteressePassageiro(String nome, String telefone, String origem, String destino, String data, String passageiros) {
 
@@ -31,6 +27,10 @@ public class InteressePassageiro {
         this.destino = destino;
         this.data = data;
         this.passageiros = passageiros;
+    }    
+    
+    public InteressePassageiro() {
+
     }    
     
     public String getNome() {

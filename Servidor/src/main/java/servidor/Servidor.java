@@ -17,31 +17,21 @@ import javax.ws.rs.core.Response;
 @Path("/funcoes")
 public class Servidor {
 
-    ArrayList<Cliente> clientes = new ArrayList<>(); //Lista de clientes
-    ArrayList<InteresseCarona> interesseMotorista = new ArrayList<>(); //Lista de interesse em motoristas
-    ArrayList<InteressePassageiro> interessePassageiro = new ArrayList<>(); //Lista de interesse em passageiros
+	static ArrayList<Cliente> clientes = new ArrayList<>(); //Lista de clientes
+    static ArrayList<InteresseCarona> interesseMotorista = new ArrayList<>(); //Lista de interesse em motoristas
+    static ArrayList<InteressePassageiro> interessePassageiro = new ArrayList<>(); //Lista de interesse em passageiros
     String result;
 
-	public Servidor() {
-		
-			interessePassageiro.add(new InteressePassageiro("Elder", "(41) 998629640", "Curitiba", "Paranagua", "13-08-2021", "4"));
-			interessePassageiro.add(new InteressePassageiro("David", "(41) 9984569640", "Curitiba", "Paranagua", "13-08-2021", "2"));			
-			interessePassageiro.add(new InteressePassageiro("Nataly", "(41) 998643444", "Paranagua", "Curitiba", "14-08-2021", "3"));
-
-			interesseMotorista.add(new InteresseCarona("Elder", "(41) 998629640", "Curitiba", "Paranagua", "13-08-2021"));
-			interesseMotorista.add(new InteresseCarona("David", "(41) 9984569640", "Curitiba", "Paranagua", "13-08-2021"));			
-			interesseMotorista.add(new InteresseCarona("David", "(41) 998643444", "Paranagua", "Curitiba", "14-08-2021"));
-			interesseMotorista.add(new InteresseCarona("Nataly", "(41) 998629640", "Curitiba", "Paranagua", "13-08-2021"));
-			interesseMotorista.add(new InteresseCarona("Matheus", "(41) 9984569640", "Curitiba", "Paranagua", "13-08-2021"));			
+	public Servidor() {		
 			
 	}
 
 	
 	@POST
 	//@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
+	//@Produces(MediaType.APPLICATION_JSON)
 	@Path("/cadastro/{nome}/{telefone}")
-	public Cliente cadastrarUsuario(@PathParam("nome") String nome, @PathParam("telefone") String telefone) {
+	public void cadastrarUsuario(@PathParam("nome") String nome, @PathParam("telefone") String telefone) {
 		
 		if (nome == null || nome.trim().equals("")) {
 			throw new WebApplicationException(Response
@@ -50,15 +40,13 @@ public class Servidor {
 		}
 		
 		//Adiciona cliente na lista de clientes
-		Cliente cliente = new Cliente(clientes.size(), nome, telefone);
-        clientes.add(cliente);
-        
+		clientes.add(new Cliente(clientes.size(), nome, telefone));
+
         //Mostra todos os clientes cadastrados no console
         clientes.forEach(c -> {
             System.out.println("Id: " + c.getId() + ". Nome: " + c.getNome() + ". Telefone: " + c.getTelefone() + ".");
-        });	
-		
-		return cliente;
+        });
+
 	}	
 	
 
@@ -74,12 +62,16 @@ public class Servidor {
             //Verificação de nulo para evitar null pointer exception dados que id único é o índice na lista
             if(c != null){
                 if(c.getOrigem().equals(origem) && c.getDestino().equals(destino) && c.getData().equals(data)){
-                	result += "<li>Nome: " + c.getNome() + ". Telefone: " + c.getTelefone() + ".</li>";
+                	System.out.println("a" + result);
+                	result += "<li><b>Nome:</b> " + c.getNome() + ". <b>Telefone:</b> " + c.getTelefone() + ".</li>";
                 }
             }
         });
   
         result += "</ul>";
+        
+        System.out.println(result);
+        
 		return result;
 		
 	}	
@@ -88,36 +80,30 @@ public class Servidor {
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/cadastroInteresse/{nome}/{telefone}/{origem}/{destino}/{data}")	
 	public String interesseEmMotorista(@PathParam("nome") String nome, @PathParam("telefone") String telefone, @PathParam("origem") String origem, @PathParam("destino") String destino, @PathParam("data") String data)  {
-		
-		InteresseCarona passageiro = new InteresseCarona();
-		passageiro.setNome(nome);
-		passageiro.setTelefone(telefone);
-		passageiro.setOrigem(origem);
-		passageiro.setDestino(destino);
-		passageiro.setData(data);
-        interesseMotorista.add(passageiro);
+	
+        interesseMotorista.add(new InteresseCarona(nome, telefone, origem, destino, data));
 
         interesseMotorista.forEach(c -> {
-            System.out.println("Nome: " + c.getNome() + ". Telefone: " + c.getTelefone() + ".");
+            System.out.println("Nome: " + c.getNome() + ". Origem: " + c.getOrigem() + ".");
         });	
         
         interessePassageiro.forEach(c -> {
             //Verificação de nulo para evitar null pointer exception dados que id único é o índice na lista
             if(c != null){
-                try {
+               // try {
                     if(c.getOrigem().equals(origem) && c.getDestino().equals(destino) && c.getData().equals(data)){
                         System.out.println("Interesse M: " + interesseMotorista.size());
 
                         //Chamada bidirecional chamando método do cliente para notificar o motorista
                         //c.getInterfaceCli().notificarMotorista("Novo passageiro! Passageiro: " + nome + " Telefone: " + telefone);
 
-                    } else {
+                    } //else {
                         //"Notifica" motoristas que não se enquadraram nos dados da carona com vazio. Melhorar.
                         //c.getInterfaceCli().notificarMotorista("");
-                    }
-                } catch (Exception ex) {
-                        System.out.println("NotificarPassageiro: " + ex.getMessage());
-                }
+                    //}
+                //} catch (Exception ex) {
+                //        System.out.println("NotificarPassageiro: " + ex.getMessage());
+                //}
             }
         });
 
@@ -156,6 +142,10 @@ public class Servidor {
             }
         });
 
+        interessePassageiro.forEach(c -> {
+            System.out.println("Nome: " + c.getNome() + ". Origem: " + c.getOrigem() + ".");
+        });	        
+        
         //Código único do intesse é a posição do elemento na matriz, que não muda     
         return String.valueOf(interessePassageiro.size()-1);
                 
@@ -204,7 +194,7 @@ public class Servidor {
         System.out.println();			
 		
         //Cancela o interesse em carona tornando nulos os dados do motorista
-        interesseMotorista.set(Integer.parseInt(id)-1, null);
+        interesseMotorista.set(Integer.parseInt(id), null);
      
         System.out.println("Interesses depois:");
         interesseMotorista.forEach(c -> {
@@ -228,7 +218,7 @@ public class Servidor {
         System.out.println();	
     	
         //Cancela o interesse em passeiro tornando nulos os dados da carona
-        interessePassageiro.set(Integer.parseInt(id)-1, null);
+        interessePassageiro.set(Integer.parseInt(id), null);
 
         System.out.println("Caronas depois:");
         interessePassageiro.forEach(c -> {
