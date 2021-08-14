@@ -81,7 +81,7 @@
 	    html += "<label>Data: </label> ";
 	    html += "<input type='text' id='intData" + index + "'> ";    
 	    html += "<input type='button' id='btCadrI" + index + "' value='Cadastrar' onclick='cadastrarInteresse("+ index + ",itemI" + index + ")'> ";
-	    html += "<input type='button' id='btCancI" + index + "' value='Cancelar'  disabled onclick='cancelarInteresse(\"" + root + " #itemC" + index + "\"," + index + ")'><br/>"
+	    html += "<input type='button' id='btCancI" + index + "' value='Cancelar'  disabled onclick='cancelarInteresse(\"" + root + " #itemI" + index + "\"," + index + ")'><br/>"
 	    html += "</span>";
 	    
 	    inputs = $(root).append(html);
@@ -105,7 +105,8 @@
 	
 	function renderList(data) {
 		
-	    var html = "";
+		console.log(data);
+	    /*var html = "";
 	
 	    html += "<ul>";
 	    console.log(JSON.stringify(data));
@@ -117,29 +118,10 @@
 	
 	    }
 	
-	    html += "</ul>";
+	    html += "</ul>";*/
 	
-	    $("#result").html(html);
+	    $("#result").html(data);
 	}	
-	
-	function formToJSON() {
-	    var result = {
-	        "id" : $('#id').val(),
-	        "nome" : $('#nome').val(),
-	        "telefone" : $('#telefone').val()
-	    };
-	    /*$("#phones span").each(function(index, elem) {
-	
-	        result.phones.push({
-	            "type" : $("#phones #" + elem.id + " input:eq(0)").val(),
-	            "number" : $("#phones #" + elem.id + " input:eq(1)").val()
-	        });
-	
-	    });*/
-	
-	
-	    return (JSON.stringify(result));
-	}
 	
 	function loadContact(id) {
 	    findById(id, function(data) {
@@ -157,41 +139,14 @@
 	    fillForm({
 	        "name" : ""
 	    });
-	}
-	
-	function fillForm(cliente) {
-	
-	    $("#id").val(cliente.id);
-	    $("#nome").val(cliente.nome);
-	    $("#telefone").val(cliente.telefone);
-	
-	    /*$("#phones").html("");
-	    if (cliente.phones != null) {
-	        for ( var i = 0; i < cliente.phones.length; i++) {
-	            addInput("#phones", cliente.phones[i].type,
-	            		cliente.phones[i].number);
-	        }
-	    }*/
-	
-	
-	}		
-	
-	function removeContact(id) {
-	    deleteContact(id, function(data, textStatus, jqXHR) {
-	        alert('Cliente removido com sucesso!');
-	        findAll(renderList);
-	    });
-	}
-	
-	function cancel() {
-	
+	    
 	    $("#form").css({
 	        "visibility" : "hidden",
 	        "display" : "none"
 	    });
 	    clearForm();
 	}
-	
+
 	$(function() {
 	    
 	    //findAll(renderList);
@@ -214,12 +169,10 @@
 			    <legend id="fieldset"> Cadastro de Usuário </legend>
 			    <input id="id" type="hidden">
 			    <label for="nome">Nome: </label>
-			   	<input id="nome" type="text" name="nome"/>
-			    <label for="telefone">Telefone: </label>
-			    <input id="telefone" type="text" name="telefone"/>
-				<br/>
-				<br/>
-				<input id="btnSave" type="button" value="Salvar" onclick="adicionarUsuario();">
+			   	<input id="nome" type="text" name="nome"/> 
+			    <label for="telefone"> Telefone: </label>
+			    <input id="telefone" type="text" name="telefone"/>  
+				<input id="btnSave" type="button" value="Cadastrar" onclick="adicionarUsuario();">
 			</fieldset>
 		</form>
 	</div>   
@@ -234,7 +187,6 @@
             <label>Data: </label>
             <input type="text" id="searchData">                        
             <input type="button" id="btnSearch" value="Buscar" onclick="buscaCarona();">
-            <input id="btnCancel" type="reset" value="Cancelar" onclick="cancel();">
         </fieldset>
     </div>
     <br/>

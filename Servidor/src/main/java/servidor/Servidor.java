@@ -1,6 +1,5 @@
 package servidor;
 
-import java.util.List;
 import java.util.ArrayList;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -21,6 +20,7 @@ public class Servidor {
     ArrayList<Cliente> clientes = new ArrayList<>(); //Lista de clientes
     ArrayList<InteresseCarona> interesseMotorista = new ArrayList<>(); //Lista de interesse em motoristas
     ArrayList<InteressePassageiro> interessePassageiro = new ArrayList<>(); //Lista de interesse em passageiros
+    String result;
 
 	public Servidor() {
 		
@@ -65,22 +65,21 @@ public class Servidor {
 	//Retorna a lista de corona cadastradas que se enquadram nos parâmetros do passageiro
 	@GET
 	@Path("/busca/{origem}/{destino}/{data}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<InteressePassageiro> listaCaronas(@PathParam("origem") String origem, @PathParam("destino") String destino, @PathParam("data") String data) {
+	@Produces(MediaType.TEXT_HTML)
+	public String listaCaronas(@PathParam("origem") String origem, @PathParam("destino") String destino, @PathParam("data") String data) {
 		
-		List<InteressePassageiro> result = new ArrayList<InteressePassageiro>();
+		result = "<ul>";
 		
         interessePassageiro.forEach(c -> {
             //Verificação de nulo para evitar null pointer exception dados que id único é o índice na lista
             if(c != null){
-
                 if(c.getOrigem().equals(origem) && c.getDestino().equals(destino) && c.getData().equals(data)){
-                    //listaCaronas.add("\nMotorista: " + c.getNome() + ". Telefone: " + c.getTelefone());
-                	result.add(c);
+                	result += "<li>Nome: " + c.getNome() + ". Telefone: " + c.getTelefone() + ".</li>";
                 }
             }
         });
-        System.out.println(result);
+  
+        result += "</ul>";
 		return result;
 		
 	}	
@@ -190,17 +189,6 @@ public class Servidor {
 	public Response update(@PathParam("contactId") int id, Cliente cliente) {
 		clientes.set(id - 1, cliente);
 		cliente.setId(clientes.indexOf(cliente) + 1);
-		return Response.ok().build();
-	}
-
-	@DELETE
-	public Response delete(@QueryParam("contactId") int id) {
-
-		if (id > clientes.size()) {
-			throw new WebApplicationException(404);
-		}
-
-		clientes.remove(id - 1);
 		return Response.ok().build();
 	}
 

@@ -30,10 +30,11 @@ function listaCaronas(origem, destino, data, callback) {
 		$.ajax({
 			type : 'GET',
 			url : rootURL + '/busca/' + origem + '/' + destino + '/' + data,
-			dataType : "json",
+			dataType : "text",
 			success : callback
 		});
 	} 
+
 }
 
 function cadastraCarona(nome, telefone, origem, destino, data, passageiros, callback) {
@@ -78,51 +79,7 @@ function cancelaInteresse(id, callback) {
 		url : rootURL + '/cancelaInteresse/' + '?id=' + id,
 		success : callback,
 		error : function(jqXHR, textStatus, errorThrown) {
-			alert('Erro excluindo carona! ' + textStatus);
+			alert('Erro excluindo interesse! ' + textStatus);
 		}
 	});
 }
-
-function findAll(callback) {
-	$.ajax({
-		type : 'GET',
-		url : rootURL + '/all',
-		dataType : "json", 
-		success : callback
-	});
-}
-
-function findById(id, callback) {
-	$.ajax({
-		type : 'GET',
-		url : rootURL + '/' + id,
-		dataType : "json",
-		success : callback
-	});
-}
-
-function updateContact(id, cliente, callback) {
-	$.ajax({
-		type : 'PUT',
-		contentType : 'application/json',
-		url : rootURL + '/' + id,
-		data : cliente,
-		success : callback,
-		error : function(jqXHR, textStatus, errorThrown) {
-			alert('Erro atualizando cliente: ' + textStatus);
-		}
-	});
-}
-
-function deleteContact(id, callback) {
-	$.ajax({
-		type : 'DELETE',
-		url : rootURL + '?id=' + id,
-		success : callback,
-		error : function(jqXHR, textStatus, errorThrown) {
-			alert('Erro excluindo cliente: ' + textStatus);
-		}
-	});
-}
-
-
