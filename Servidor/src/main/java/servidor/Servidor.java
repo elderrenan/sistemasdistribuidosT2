@@ -1,11 +1,11 @@
 package servidor;
 
+
 import java.util.ArrayList;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -13,15 +13,24 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.inject.Singleton;
+import org.glassfish.jersey.media.sse.EventOutput;
+import org.glassfish.jersey.media.sse.OutboundEvent;
+import org.glassfish.jersey.media.sse.SseBroadcaster;
+import org.glassfish.jersey.media.sse.SseFeature;
 
+@Singleton
 @Path("/funcoes")
 public class Servidor {
 
 	static ArrayList<Cliente> clientes = new ArrayList<>(); //Lista de clientes
     static ArrayList<InteresseCarona> interesseMotorista = new ArrayList<>(); //Lista de interesse em motoristas
     static ArrayList<InteressePassageiro> interessePassageiro = new ArrayList<>(); //Lista de interesse em passageiros
+    static ArrayList<SseBroadcaster> broadcasters = new ArrayList<>(); //Lista de clientes
+    //SseBroadcaster broadcaster = new SseBroadcaster();
     String result;
-
+    int id;
+    
 	public Servidor() {		
 			
 	}
@@ -70,8 +79,6 @@ public class Servidor {
   
         result += "</ul>";
         
-        System.out.println(result);
-        
 		return result;
 		
 	}	
@@ -88,26 +95,21 @@ public class Servidor {
         });	
         
         interessePassageiro.forEach(c -> {
-            //Verificação de nulo para evitar null pointer exception dados que id único é o índice na lista
+            //Verificação de nulo para evitar null pointer exception dados que id único é o índice na lista          
             if(c != null){
-               // try {
-                    if(c.getOrigem().equals(origem) && c.getDestino().equals(destino) && c.getData().equals(data)){
-                        System.out.println("Interesse M: " + interesseMotorista.size());
-
-                        //Chamada bidirecional chamando método do cliente para notificar o motorista
-                        //c.getInterfaceCli().notificarMotorista("Novo passageiro! Passageiro: " + nome + " Telefone: " + telefone);
-
-                    } //else {
-                        //"Notifica" motoristas que não se enquadraram nos dados da carona com vazio. Melhorar.
-                        //c.getInterfaceCli().notificarMotorista("");
-                    //}
-                //} catch (Exception ex) {
-                //        System.out.println("NotificarPassageiro: " + ex.getMessage());
-                //}
+                if(c.getOrigem().equals(origem) && c.getDestino().equals(destino) && c.getData().equals(data)){
+                	
+                    clientes.forEach(d -> {
+                    	if(d.getNome().equals(c.getNome()) && d.getTelefone().equals(c.getTelefone())){
+                    		id = d.getId();
+                    	}
+                    });
+                	
+                    broadcastMessage("Novo passageiro! Passageiro: " + nome + ". Telefone: " + telefone + ".", nome, telefone, id);
+                }
             }
+            
         });
-
-        System.out.println("Passageiros: " + interesseMotorista.size());
 
         //Código único do intesse é a posição do elemento na matriz, que não muda
         return String.valueOf(interesseMotorista.size()-1);
@@ -123,21 +125,15 @@ public class Servidor {
         interesseMotorista.forEach(c -> {
             //Verificação de nulo para evitar null pointer exception dados que id único é o índice na lista
             if(c != null){
-            	
-                try {
-                    if(c.getOrigem().equals(origem) && c.getDestino().equals(destino) && c.getData().equals(data)){
-
-                        System.out.println("\ninteresse P: " + (interessePassageiro.size() - 1));
-
-                        //Chamada bidirecional chamando método do cliente para notificar o passageiro
-                        //c.getInterfaceCli().notificarPassageiro("Nova carona! Motorista: " + nome + " Telefone: " + telefone);
-
-                    } else {
-                        //"Notifica" passageiros que não se enquadraram nos dados da carona com vazio. Melhorar.           
-                        //c.getInterfaceCli().notificarPassageiro("");
-                    }
-                } catch (Exception ex) {
-                    System.out.println("NotificarPassageiro: " + ex.getMessage());
+                if(c.getOrigem().equals(origem) && c.getDestino().equals(destino) && c.getData().equals(data)){
+                	
+                    clientes.forEach(d -> {
+                    	if(d.getNome().equals(c.getNome()) && d.getTelefone().equals(c.getTelefone())){
+                    		id = d.getId();
+                    	}
+                    });
+                	
+                    broadcastMessage("Nova carona! Motorista: " + nome + ". Telefone: " + telefone + ".", nome, telefone, id);
                 }
             }
         });
@@ -150,37 +146,6 @@ public class Servidor {
         return String.valueOf(interessePassageiro.size()-1);
                 
     }	
-	
-	
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/{contactId}")
-	public Cliente getContact(@PathParam("contactId") int id) {
-
-		Cliente result = null;
-
-		for (Cliente cliente : clientes) {
-			if (cliente.getId() == id) {
-				result = cliente;
-				break;
-			}
-		}
-
-		if (result == null) {
-			throw new WebApplicationException(404);
-		}
-
-		return result;
-	}
-
-	@PUT
-	@Path("/{contactId}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response update(@PathParam("contactId") int id, Cliente cliente) {
-		clientes.set(id - 1, cliente);
-		cliente.setId(clientes.indexOf(cliente) + 1);
-		return Response.ok().build();
-	}
 
 	@DELETE
     @Path("/cancelaInteresse/")
@@ -230,4 +195,33 @@ public class Servidor {
         return Response.ok().build();
     } 	
 
+    @POST
+    @Path("/notificaCliente/{nome}/{telefone}")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN)    
+    public String broadcastMessage(String message, @PathParam("nome") String nome, @PathParam("telefone") String telefone, @PathParam("id") int indice) {
+        OutboundEvent.Builder eventBuilder = new OutboundEvent.Builder();
+        message = message + "\n\n";
+        OutboundEvent event = eventBuilder.name("message")
+            .mediaType(MediaType.TEXT_PLAIN_TYPE)
+            .data(String.class, message)
+            .build();
+
+        broadcasters.get(indice).broadcast(event);
+
+        return "Message was '" + message + "' broadcast.";
+    }
+
+    @GET
+    @Path("/notificaCliente/{nome}/{telefone}")
+    @Produces(SseFeature.SERVER_SENT_EVENTS)
+    public EventOutput listenToBroadcast() {
+    	SseBroadcaster broadcaster = new SseBroadcaster();
+        final EventOutput eventOutput = new EventOutput();
+    	broadcaster.add(eventOutput);
+        broadcasters.add(broadcaster);
+        System.out.println("registrado!" +  broadcaster);
+        return eventOutput;
+    }    
+    
 }

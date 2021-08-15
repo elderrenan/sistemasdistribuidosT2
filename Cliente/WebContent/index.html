@@ -10,6 +10,27 @@
 		//addContact(formToJSON(), function(data, textStatus, jqXHR) {
 	    cadastraUsuario($('#nome').val(), $('#telefone').val(), function(data, textStatus, jqXHR) {
 	        alert('Cadastrado com sucesso!');
+	        
+	    	var url = rootURL + "/notificaCliente/" + $('#nome').val() + "/" + $('#telefone').val();
+	    	
+	    	var source = new EventSource(url);
+	    	source.onerror=function(event)	{
+	    		console.log("error [" + source.readyState + "]");
+	    	};
+
+	    	source.onopen = function(event){
+	    	    console.log("canal de eventos aberto!");
+	    	};
+	    	
+	    	source.addEventListener(
+	    		"message",
+	    		function(event){
+	    		    console.log(event.data);
+	    		    alert(event.data);
+	    		},
+	    		false
+	    	);	        
+	        
 	    });
 	    
 	    $("#nome").prop('disabled', true);
@@ -59,7 +80,7 @@
 		$("#btCadrC"+index).prop('disabled', true);
 		$("#btCancC"+index).prop('disabled', false);
 		cadastraCarona($("#nome").val(), $("#telefone").val(), $("#carOrigem"+index).val(), $("#carDestino"+index).val(), $("#carData"+index).val(), $("#carPassageiros"+index).val(), function(data, textStatus, jqXHR) {
-	        alert('Carona cadastrada com sucesso! ' + data);
+	        alert('Carona cadastrada com sucesso!');
 	        $(root).append("<input id='idCarona" + index + "' style='visibility: hidden; display: none;' name='"+ data+ "' value='" + data + "'>");
 	    });
 	}
@@ -91,7 +112,7 @@
 		$("#btCadrI"+index).prop('disabled', true);
 		$("#btCancI"+index).prop('disabled', false);
 		cadastraInteresse($("#nome").val(), $("#telefone").val(), $("#intOrigem"+index).val(), $("#intDestino"+index).val(), $("#intData"+index).val(), function(data, textStatus, jqXHR) {
-	        alert('Interesse registrado com sucesso! ' + data);
+	        alert('Interesse registrado com sucesso!');
 	        $(root).append("<input id='idInteresse" + index + "' style='visibility: hidden; display: none;' name='"+ data+ "' value='" + data + "'>");
 	    });
 	}
