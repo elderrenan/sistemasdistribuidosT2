@@ -52,9 +52,11 @@ public class Servidor {
 		clientes.add(new Cliente(clientes.size(), nome, telefone));
 
         //Mostra todos os clientes cadastrados no console
+		System.out.println("\nClientes cadastrados:");
         clientes.forEach(c -> {
-            System.out.println("Id: " + c.getId() + ". Nome: " + c.getNome() + ". Telefone: " + c.getTelefone() + ".");
+            System.out.println("	Id: " + c.getId() + ". Nome: " + c.getNome() + ". Telefone: " + c.getTelefone() + ".");
         });
+        System.out.println();
 
 	}	
 	
@@ -67,15 +69,17 @@ public class Servidor {
 		
 		result = "<ul>";
 		
+		System.out.println("\nCaronas retornadas:");
         interessePassageiro.forEach(c -> {
             //Verificação de nulo para evitar null pointer exception dados que id único é o índice na lista
             if(c != null){
                 if(c.getOrigem().equals(origem) && c.getDestino().equals(destino) && c.getData().equals(data)){
-                	System.out.println("a" + result);
+                	System.out.println("	Carona: " + result);
                 	result += "<li><b>Nome:</b> " + c.getNome() + ". <b>Telefone:</b> " + c.getTelefone() + ".</li>";
                 }
             }
         });
+        System.out.println();
   
         result += "</ul>";
         
@@ -90,9 +94,13 @@ public class Servidor {
 	
         interesseMotorista.add(new InteresseCarona(nome, telefone, origem, destino, data));
 
+        System.out.println("\nInteresses em motorista após cadastro:");
         interesseMotorista.forEach(c -> {
-            System.out.println("Nome: " + c.getNome() + ". Origem: " + c.getOrigem() + ".");
-        });	
+        	if(c != null){
+        		System.out.println("	Nome: " + c.getNome() + ". Origem: " + c.getOrigem() + ".");
+        	}
+        });
+        System.out.println();
         
         interessePassageiro.forEach(c -> {
             //Verificação de nulo para evitar null pointer exception dados que id único é o índice na lista          
@@ -122,6 +130,7 @@ public class Servidor {
 		
         interessePassageiro.add(new InteressePassageiro(nome, telefone, origem, destino, data, pass));
 
+        
         interesseMotorista.forEach(c -> {
             //Verificação de nulo para evitar null pointer exception dados que id único é o índice na lista
             if(c != null){
@@ -136,11 +145,15 @@ public class Servidor {
                     broadcastMessage("Nova carona! Motorista: " + nome + ". Telefone: " + telefone + ".", nome, telefone, id);
                 }
             }
-        });
+        });        
 
+        System.out.println("\nInteresses em passageiro após cadastro: ");
         interessePassageiro.forEach(c -> {
-            System.out.println("Nome: " + c.getNome() + ". Origem: " + c.getOrigem() + ".");
-        });	        
+        	if(c != null){
+        		System.out.println("	Nome: " + c.getNome() + ". Origem: " + c.getOrigem() + ".");
+        	}
+        });
+        System.out.println();
         
         //Código único do intesse é a posição do elemento na matriz, que não muda     
         return String.valueOf(interessePassageiro.size()-1);
@@ -152,21 +165,24 @@ public class Servidor {
     @Consumes(MediaType.APPLICATION_JSON)  
     public Response cancInteresseEmMotorista(@QueryParam("id") String id) {
 	
-		System.out.println("Interesses antes:");
+		System.out.println("\nInteresses antes de cancelamento:");
 		interesseMotorista.forEach(c -> {
-            System.out.println("Nome: " + c.getNome() + ". Telefone: " + c.getTelefone() + ".");
+			if(c != null){
+				System.out.println("	Nome: " + c.getNome() + ". Telefone: " + c.getTelefone() + ".");
+			}
         });    	
         System.out.println();			
 		
         //Cancela o interesse em carona tornando nulos os dados do motorista
         interesseMotorista.set(Integer.parseInt(id), null);
      
-        System.out.println("Interesses depois:");
+        System.out.println("Interesses após cancelamento: ");
         interesseMotorista.forEach(c -> {
         	if(c != null){
-        		System.out.println("Nome: " + c.getNome() + ". Telefone: " + c.getTelefone() + ".");
+        		System.out.println("	Nome: " + c.getNome() + ". Telefone: " + c.getTelefone() + ".");
         	}
-        });        
+        });
+        System.out.println();
         
         return Response.ok().build();
     }    
@@ -176,21 +192,24 @@ public class Servidor {
     @Consumes(MediaType.APPLICATION_JSON)    
     public Response cancInteresseEmPassageiro(@QueryParam("id") String id) {
     	
-    	System.out.println("Caronas antes:");
+    	System.out.println("\nMotoristas antes de cancelamento:");
     	interessePassageiro.forEach(c -> {
-            System.out.println("Nome: " + c.getNome() + ". Telefone: " + c.getTelefone() + ".");
+    		if(c != null){
+    			System.out.println("	Nome: " + c.getNome() + ". Telefone: " + c.getTelefone() + ".");
+    		}
         });    	
         System.out.println();	
     	
         //Cancela o interesse em passeiro tornando nulos os dados da carona
         interessePassageiro.set(Integer.parseInt(id), null);
 
-        System.out.println("Caronas depois:");
+        System.out.println("Motoristas após de cancelamento::");
         interessePassageiro.forEach(c -> {
         	if(c != null){
         		System.out.println("Nome: " + c.getNome() + ". Telefone: " + c.getTelefone() + ".");
         	}
-        }); 
+        });
+        System.out.println();
         
         return Response.ok().build();
     } 	
@@ -209,7 +228,7 @@ public class Servidor {
 
         broadcasters.get(indice).broadcast(event);
 
-        return "Message was '" + message + "' broadcast.";
+        return "A mensagem '" + message + "' foi enviada.";
     }
 
     @GET
@@ -220,7 +239,7 @@ public class Servidor {
         final EventOutput eventOutput = new EventOutput();
     	broadcaster.add(eventOutput);
         broadcasters.add(broadcaster);
-        System.out.println("registrado!" +  broadcaster);
+        System.out.println("Registrado! Chave: " +  broadcaster);
         return eventOutput;
     }    
     
