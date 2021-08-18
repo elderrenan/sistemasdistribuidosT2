@@ -27,3 +27,8 @@ Obs.: como não precisamos mais enviar a chave pública, pois não precisamos ma
 Nesse caso, informações para contato podem ser enviadas no registro de interesse.
 Porém, não há problema se quiserem manter a assinatura e o cadastro
 
+Ferramentas utilizadas na implementação:
+- IDE Eclipse 2021‑06
+- JDK 1.8 (1.8.0_301)
+- Servidor Apache Tomcat 7.0
+- Jersey 2.23.2
