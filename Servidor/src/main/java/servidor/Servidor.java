@@ -1,6 +1,5 @@
 package servidor;
 
-
 import java.util.ArrayList;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -26,8 +25,7 @@ public class Servidor {
 	static ArrayList<Cliente> clientes = new ArrayList<>(); //Lista de clientes
     static ArrayList<InteresseCarona> interesseMotorista = new ArrayList<>(); //Lista de interesse em motoristas
     static ArrayList<InteressePassageiro> interessePassageiro = new ArrayList<>(); //Lista de interesse em passageiros
-    static ArrayList<SseBroadcaster> broadcasters = new ArrayList<>(); //Lista de clientes
-    //SseBroadcaster broadcaster = new SseBroadcaster();
+    static ArrayList<SseBroadcaster> broadcasters = new ArrayList<>(); //Lista broadcasters
     String result;
     int id;
     
