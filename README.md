@@ -1,5 +1,6 @@
 # sistemasdistribuidosT2
-Trabalho 2 da disciplina de Sistemas Distribuídos do semestre 2021/01 do Bacharelado em Sistemas de Informação da UTFPR.
+
+Serviços web (SOAP ou REST)
 
 Vamos continuar com a aplicação de caronas e os mesmos métodos solicitados na aplicação 1.
 Porém, cliente e servidor precisam estar em linguagens de programação diferentes.
